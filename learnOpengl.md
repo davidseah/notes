@@ -82,6 +82,8 @@ void main()
 * Another way to pass data from our application in CPU to the shaders on the GPU is by uniforms
 * Uniforms are global, meaning that they are unique per shader program object and can be accessed from any shader at any stage in the shader program.
 * second is that uniforms will keep their values until they are either reset or updated.
+* You don't need to set glUseProgram to get the uniform location
+* but you need to set glUseProgram if you want to update the value.
 
 #### Example
 * We need to first find the index/location of the uniform attribute in our shader.
@@ -92,6 +94,8 @@ int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
 glUseProgram(shaderProgram);
 glUniform4f(vertColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 ```
+
+
 
 
 
@@ -145,4 +149,23 @@ void main()
 ```
 
 * Note that when sampling textures at their border, OpenGL interpolates the border values with the next repeated value of the texture (because we set its wrapping parameters to GL_REPEAT).  This is usually okay, but since we're using transaparent values, the top of the texture image gets its transparent value interpolated with the bottom. 
+
+## Blending
+* to render images with different levels of transparency we have to enable blending.
+* We enable blending by enabling GL_BLEND, glEnable(GL_BLEND);
+* Blending equation in OpenGL
+
+$C_{result}$ = $C_{source}$ * $F_{source}$ + $C_{destination}$ * $F_{destination}$ 
+
+$C_{source}$: source color vector. This is the color vector that originates from the texture. 
+
+$C_{destination}$: destination color vector. This is the color vector that is currently stored in the color buffer. 
+
+$F_{source}$: source factor value. Set the impact of the alpha value on the source color
+
+$F_{destination}$: destination factor value. Sets the impact of the alpha value on the destination color. 
+
+* After the fragment shader has run and all the tests have passed, this blend equation is let loose on the fragment's color output and with whatever is currently in the color buffer (previous fragment colo stored before the current fragment).
+
+* The source and the destination colors will automatically be set by OpenGL, but the source and destination factor can be set to a value of our choosing.
 
