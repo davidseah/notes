@@ -1309,5 +1309,35 @@ Good Engineering
 
 # 9 April 2019
 ## To Do list
+
 ## Daily Log
 ---
+
+### Become Expert
+* Advance Beginner Stage
+    * Becomes an advanced beginner when they can start to troubleshoot their problems and work on their own. 
+    * They are still primary using recipes but they have more contextual awareness of when to use which recipes. 
+* Competent Stage
+    *  You have a better sense of what is relevant and what isn't. 
+    * You can draw on a wide collection of recipes based on those situation rules. 
+* Proficient Stage
+    * Inituitive sense of what the goal should be given the situation. 
+    * While compentent has to create and find rules for what to do in a situation, proficient has an intuitive sense of what the goal should be but not necessarily exactly how to do it. 
+* Expert
+    * Pure inituition
+
+Going from Novice to expert
+* Going from Zero to Novice
+    * At this stage focus on collecting recipes. 
+    * You should be reading books, blogs listening to speecheds, taking classes, whatever will give you a large repertoire of recipes as fast aspossble. 
+    * But you can't be just reading them, you have to apply them. 
+* Going from novice to advanceed beginner
+    * Now that you have collected a large database of recipes and started applying them, you hsould begin to develop some contextual understanding of when to use which recipes. 
+    * Start looking for more maxims and applying them to your practice and see if they make sense to you
+    * try to change things in them and see what happens.
+    * make your own versions of the recipes by piecing togther different recipes and looking up help as you need it. 
+* Going from advanced beginner to competent
+    * At this point you should have a large repertoire of recipes and maxims that you can applys. 
+    * But not a lot of clarity around what is important in deciding which ones to uses. 
+* going from competent to proficient
+
