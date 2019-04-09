@@ -68,4 +68,21 @@ Best time to learn
 * Don't expect to know everything, make use of diffuse mode
 * Use Pomodoro, deep work is important
 
+# Learning/ Deep Work
+## Hypothesis amount of hours needed to learn something
 
+### 100 hours
+1 hour a day, it will take me 3 and half months
+
+### 1000 hours
+1hpd == 1000 days == 3 years
+2hpd ==  500 days == 1.5 years
+
+Let experiment with 100 hours. 
+I am going test it with learning Vulkan. 
+I can safely says that I have suse about 6 hours? 
+This means a total of 94 hours left. 
+I have two more weeks to the workshop. 
+so 94/14 = 6.7 hours. 
+I need to invest 6.7 hours everyday. hmmm
+seems hard. 

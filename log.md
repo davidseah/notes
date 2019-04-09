@@ -1288,7 +1288,7 @@ Good Engineering
 ---
 1. Read through Davinci (2T) 
 2. Write code for Vulkan( 2T)
-3. Modify flexi beefits 
+3. Modify flexi benefits 
 4. Survey (1T)
 
 
@@ -1296,5 +1296,18 @@ Good Engineering
 ---
 * Offscreen rendering
 
+## Daily Log
+---
+
+# 8 April 2019
+## To Do list
+1. Read through Davinci (2T) 
+2. Write code for Vulkan( 2T)
+3. Modify flexi benefits (Done)
+4. Survey (1T) Done
+
+
+# 9 April 2019
+## To Do list
 ## Daily Log
 ---
