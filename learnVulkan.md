@@ -29,8 +29,8 @@
     * We need two more components to actually render to a window: a window surface(vkSurfaceKHR) and a swap chain(vkSwapchainKHR). 
     * Note the KHR postfix, which means that these objects are part of a Vulkan extension. 
     The vulkan API itself is completely platform agnostic, which is why we need to use the standarddized WSI (window system interface) extension to interact with the window manager. 
-    * The surface is a cross-platform abstraction over windows to render to and is generally instantiated by providing a reference to the native window handle, for exmaple, HWD on wiondows. Luckilu the GLFW library has a built in function to deal with the platform specific details of this. 
-    *  The swap chain is a collection of render targets. Its basic purpose is to ensire that the image that we are currently rendering to is different from the on ethat is currently on the screen. This is important to make sure that only complete images are shown. 
+    * The surface is a cross-platform abstraction over windows to render to and is generally instantiated by providing a reference to the native window handle, for exmaple, HWD on wiondows. Luckily the GLFW library has a built in function to deal with the platform specific details of this. 
+    *  The swap chain is a collection of render targets. Its basic purpose is to ensure that the image that we are currently rendering to is different from the on ethat is currently on the screen. This is important to make sure that only complete images are shown. 
     * Every time we want to draw a frame we have to ask the swap chain to provide us with an image to render to. When we've finished drawing a frame, the imgae is returned to the swap chain for it to be presented to the screen at some point. 
     * The number of render targets and conditions for presenting finished images to the screen depends on the present mode. 
     * Common present modes are double buffering 9vsync) and triple buffer.
@@ -182,6 +182,7 @@ void cleanup()
     * Tracing Vulkan calls for profiling and replaying
 
 * Here's an example fo what the implementation of a function in a diagnostics validation layer could look like
+
 ```cpp
 vkResult vkCreateInstance ()
 {
@@ -202,11 +203,12 @@ vkResult vkCreateInstance ()
 
 These validation layers can be freely stacked to included all the debugging functionality that you're interested in. You can simply enable validation layers for debug builds and completely disable them for release builds, which gives you the best of both worlds. 
 
-Vulkan does not come with any validation layers built in, but the LunarG vulkan SDK provides a nice set of layers that check for common errors. 
+Vulkan does not come with any validation layers built in, but the LunarG vulkan SDK provides a nice set of layers that check for common errors.
 
-Validation layers can only be used if they have been installed onto the system. For example, the LunarG validation layers are only available on PCs with vulkan SKD installed. 
+Validation layers can only be used if they have been installed onto the system. For example, the LunarG validation layers are only available on PCs with vulkan SKD installed.
 
 There were formerly two different types of validation layers in Vulkan.
+
 1. Instance
 2. Device specific
 
@@ -221,7 +223,125 @@ The specification document still recommends that you enable validation layers at
 We simply specify the same layers as the instance at logical device level.
 
 ### Using validation layers
-Just like extension s, validation layers need to be enabled by specifying their name. Instead of having to explicitly specify all the useful layers, the SDK allows you to request the VK_LAYER_LUNAR_standard_validation layer that implicity enables a whole range of useful diagnostic layers. 
+Just like extension s, validation layers need to be enabled by specifying their name. Instead of having to explicitly specify all the useful layers, the SDK allows you to request the VK_LAYER_LUNAR_standard_validation layer that implicitly enables a whole range of useful diagnostic layers.
+
+Let's first add two configuration variables to the program to specify the layers to enable and whether to enable them or not. I've chosen to base that value on whether the program is being compiled in debug mode or not. 
+The NDEBUG macro is part of the C++ standard and means not debug.
+
+```cpp
+const int WIDTH = 800;
+const int HEIGHT = 600;
+
+const std::vector<const char*> validationLayers = {
+    "VK_LAYER_LUNARG_standard_validation"
+};
+
+#ifdef NDEBUG
+    const bool enableValidationLayers = false;
+#else
+    const bool enableValidationLayers = true;
+#endif
+```
+
+We'll add a new function checkValidationLayerSupport that checks if all of the requested layers are available. First list all of the available layers using the vkEnumerateInstanceLayerProperties function. It's usage is identical to that of vkEnumerateinstanceExtensionProperties which was discussed in the instance creation chapter. 
+
+```cpp
+book checkValidationLayerSupport()
+{
+    uint32_t layerCount;
+    vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
+    std::vector<vklayerproperties> availableLayers(layerCount);
+    vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
+
+    return false;
+}
+```
+Next, check if all of the layers in validationlayers exist in the availableLayers list. You may need to include <cstring> for strcmp.
+```cpp
+
+for(const char* layername : validationLayers)
+{
+    bool layerFound = false;
+    for(const auto& laterproperties : availableLayers)
+    {
+        if(strcmp(layerName, layerProperties.layername) == 0)
+        {
+            layerFound = true;
+            break;
+        }
+    }
+
+    if(!layerFound)
+    {
+        return false;
+    }
+
+}
+
+return true;
+```
+
+We can now use this function in createInstance:
+
+```cpp
+void createInstance()
+{
+    if(enablevalidationLayers && !checkValidationLayerSupport())
+    {
+        throw std::runtime_error("validation layers requested, buit not available!");
+    }
+
+    ...
+}
+```
+
+Now run the program in debug mode and ensure that error does not occur. If it does , then make sure you have properly installed the Vulkan SDK. if none or very few layers are being reported, then you may be dealing with this issue(requires a LunarG account to view). See that page for help fixing it.
+
+Finally, modify the vkInstanceCreateInfo struct instantiation to include the validation layer names if they are enabled.
+
+```cpp
+if(enableValidationLayers)
+{
+    createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
+    createInfo.ppEnabledLayerNames = validationLayers.data();
+}
+else
+{
+    createInfo.enabledLayerCount = 0;
+}
+```
+
+if the check was successful then vkCreateInstance should not ever return a VK_ERROR_LAYER_NOT_PRESENT error but you hsould run the program to make sure.
+
+## Message callback
+unfortunately just enabling the layers doesn't help much, because they currently have no way to relay the debug messages back to our program. To receive those messages we have to set up a debug messenger with a callback, which requires the VK_EXT_debug_utils extension.
+
+We'll first create a getReuiredExtensions function that will return the required list of extensions based on whether validation layers are enabled or not: 
+
+```cpp
+std::vector<const char*> getRequiredExtensions()
+{
+    uint32_t glfwExtensionCount = 0;
+    const char** glfwExtensions;
+    glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+
+    if(enableValidationLayers)
+    {
+        extensions,push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+    }
+
+    return extensions;
+}
+```
+The extensions specified by GLFW are always required but the debug messenger extension is conditionally added. Note that I've used the VK_EXT_DEBUG_UTILS_EXTENSION_NAME macro here which is equal to the literal string "VK_EXT_debug_utils". Using this macro lets you avoid typos.
+
+We can now use this function in createInstance:
+```cpp
+auto extensions = getRequiredExtensions();
+createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
+createInfo.ppEnabledExtensionsNames = extensions.data();
+```
+Run the program to make sure you don't receive a VK_ERROR_EXTENSION_NOT_PRESENT error. We don't really need to check for the existence of this extension, because it should be implied by the availability of the validation layers.
 
 
 
