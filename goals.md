@@ -187,8 +187,8 @@ It might works for everyone and it might not work.
 but I have to find out and test this changes. 
 Remember it's small but quality changes. 
 
- Think Deeply about simple problems
--
+Think Deeply about simple problems
+
 
 What is my mantra? 
 I want to write code that is beautiful. When people see it, they feel a sense of beauty. 

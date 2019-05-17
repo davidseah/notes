@@ -1,17 +1,4 @@
-# C++
-## C++ Type System (Modern C++)
-## Uniform Initialization and Delegating Constructors
-## Object Lifetime and Resource Management (Modern C++)
-## Objects Own Resources (RAII)
-## Smart Pointers (Modern C++)
-## Pimpl for Compile-Time Encasulation (Modern C++)
-## Containers( Modern C++)
-## Algorithms (Modern C++
-## String and I-O Formatting (Modern C++)
-## Errors and Exception Handling (Modern C++)
-## Portability At ABI Boundaries (Modern C++)
-
-## Lambda Expression in C++
+# Lambda
 ```cpp
 #include <algorithm>
 #include <math>
@@ -40,6 +27,6 @@ void abssort(float* x, unsinged n)
 5. trailing return type optional
 6. lambda body
 
-### Capture Clause
+## Capture Clause
 ---
 A lambda can intriduce new variables in its body (in C++14), and it can also acess or capture variables from the surrounding scope. 
